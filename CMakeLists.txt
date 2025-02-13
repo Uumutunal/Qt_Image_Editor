@@ -12,6 +12,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+#set(OpenCV_DIR "C:/Users/Administrator/Downloads/openCV/opencv/build")
+#set(OpenCV_DIR "C:/Users/Administrator/Desktop/Python/vcpkg/vcpkg/packages/opencv_x64-windows/share/opencv")
+#find_package(OpenCV REQUIRED)
+#link_directories("C:/Users/Administrator/Downloads/openCV/opencv/build/lib")
+#include_directories(${OpenCV_INCLUDE_DIRS})
+#target_link_libraries(texture2 PRIVATE ${OpenCV_LIBS})
+
+# this is heuristically generated, and may not be correct
+# find_package(OpenCV CONFIG REQUIRED)
+# note: 10 additional targets are not displayed.
+# target_link_libraries(main PRIVATE opencv_ml opencv_dnn opencv_core opencv_flann)
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp

@@ -1566,6 +1566,30 @@
 			"value" : "1"
 		},
 		{
+			"name" : "OpenCV_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for OpenCV."
+				}
+			],
+			"type" : "PATH",
+			"value" : "OpenCV_DIR-NOTFOUND"
+		},
+		{
+			"name" : "Protobuf_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Protobuf."
+				}
+			],
+			"type" : "PATH",
+			"value" : "Protobuf_DIR-NOTFOUND"
+		},
+		{
 			"name" : "QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH",
 			"properties" : 
 			[

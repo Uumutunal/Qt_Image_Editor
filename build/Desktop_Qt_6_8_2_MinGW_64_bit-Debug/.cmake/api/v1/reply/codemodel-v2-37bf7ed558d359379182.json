@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-a6d6fac8ea3bed7088f8.json",
+					"jsonFile" : "directory-.-Debug-6c5745724aec7aaf1c09.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "texture2::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-texture2-Debug-0ef51f330b988f83a21c.json",
+					"jsonFile" : "target-texture2-Debug-36274241d319d64b5c8b.json",
 					"name" : "texture2",
 					"projectIndex" : 0
 				},

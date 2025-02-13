@@ -3,7 +3,7 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <filesystem>
-
+#include <QPainter>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     textureScreen = new DisplayScreen(this);
     //myWidget->move(50, 50);
-    textureScreen->setStyleSheet("QLabel { background-color : black; }");
+    textureScreen->setStyleSheet("QLabel { background-color : gray; }");
     textureScreen->setMinimumSize(750, 750); // Set a minimum size
     textureScreen->setMaximumSize(750, 750); // Set a maximum size
     //myWidget->resize(500,500);
@@ -43,6 +43,9 @@ void MainWindow::on_pushButton_clicked()
     QImage img2(fileName);
     image = img2;
 
+    //TODO: not accessible
+    img = QPixmap::fromImage(img2);
+
     QSize size =  img.size();
 
     uintmax_t size_in_bytes = std::filesystem::file_size(fileName.toStdString());
@@ -56,7 +59,27 @@ void MainWindow::on_pushButton_clicked()
     float aspectRatioW = size.width() / (textureScreen->width());
     float aspectRatioH = size.height() / (textureScreen->height());
 
-    textureScreen->setPixmap(img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio));
+    textureScreen->setImg(img);
+
+    img = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
+
+    QTransform transform;
+    //transform.translate(250, 250);
+    transform.scale(.5, .5);
+    //transform.rotate(45);
+
+    QPixmap transformedPixmap(img.size());  // Increased size to avoid cropping
+    transformedPixmap.fill(Qt::transparent);
+
+    QPainter painter(&transformedPixmap);
+    painter.setTransform(transform);
+    painter.drawPixmap(0, 0, img);  // Draw at transformed position
+    painter.end();
+
+    //img = transformedPixmap;
+
+    textureScreen->setPixmap(img);
+
 }
 
 
