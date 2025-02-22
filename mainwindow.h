@@ -25,6 +25,8 @@ private slots:
 
     void on_pushButton_save_clicked();
 
+    void on_pushButton_crop_clicked();
+
 private:
     Ui::MainWindow *ui;
     QImage image;

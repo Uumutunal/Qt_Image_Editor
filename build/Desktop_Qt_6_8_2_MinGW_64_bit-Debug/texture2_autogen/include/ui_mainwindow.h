@@ -36,6 +36,7 @@ public:
     QLabel *label_info;
     QPushButton *pushButton_save;
     QPushButton *pushButton_2;
+    QPushButton *pushButton_crop;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -43,7 +44,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1030, 661);
+        MainWindow->resize(1152, 661);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         horizontalLayout = new QHBoxLayout(centralwidget);
@@ -80,13 +81,18 @@ public:
 
         gridLayout->addWidget(pushButton_2, 1, 1, 1, 1);
 
+        pushButton_crop = new QPushButton(centralwidget);
+        pushButton_crop->setObjectName("pushButton_crop");
+
+        gridLayout->addWidget(pushButton_crop, 1, 0, 1, 1);
+
 
         horizontalLayout->addLayout(gridLayout);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1030, 21));
+        menubar->setGeometry(QRect(0, 0, 1152, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -104,6 +110,7 @@ public:
         label_info->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         pushButton_save->setText(QCoreApplication::translate("MainWindow", "Save", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+        pushButton_crop->setText(QCoreApplication::translate("MainWindow", "Crop", nullptr));
     } // retranslateUi
 
 };

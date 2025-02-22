@@ -39,6 +39,10 @@ void MainWindow::on_pushButton_clicked()
         "",
         imageTypes);
 
+    if(fileName.isEmpty()){
+        return;
+    }
+
     QPixmap img(fileName);
     QImage img2(fileName);
     image = img2;
@@ -48,9 +52,11 @@ void MainWindow::on_pushButton_clicked()
 
     QSize size =  img.size();
 
+    //Image Size
     uintmax_t size_in_bytes = std::filesystem::file_size(fileName.toStdString());
     double size_in_mb = static_cast<double>(size_in_bytes) / (1024 * 1024);
 
+    //Image Info
     QString info;
     QTextStream(&info) << size.width() << " X " << size.height() << " | " << size_in_mb << " MB";
 
@@ -60,9 +66,12 @@ void MainWindow::on_pushButton_clicked()
     float aspectRatioH = size.height() / (textureScreen->height());
 
     textureScreen->setImg(img);
+    textureScreen->resetTransform();
 
+    //TODO: Fix aspect ratio
     img = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
 
+    /*
     QTransform transform;
     //transform.translate(250, 250);
     transform.scale(.5, .5);
@@ -75,7 +84,7 @@ void MainWindow::on_pushButton_clicked()
     painter.setTransform(transform);
     painter.drawPixmap(0, 0, img);  // Draw at transformed position
     painter.end();
-
+    */
     //img = transformedPixmap;
 
     textureScreen->setPixmap(img);
@@ -107,4 +116,10 @@ void MainWindow::on_pushButton_save_clicked()
 }
 
 
+
+
+void MainWindow::on_pushButton_crop_clicked()
+{
+    textureScreen->toggleCropping();
+}
 
