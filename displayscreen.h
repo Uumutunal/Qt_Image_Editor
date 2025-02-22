@@ -34,7 +34,7 @@ protected:
     QPoint mouseStartPos;
 
     QPoint cropStart;
-    QPoint cropSsize;
+    QPoint cropSize;
 
     bool isCropping = false;
 };

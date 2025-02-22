@@ -403,9 +403,9 @@ C:/Users/Administrator/Desktop/Python/qt/texture2/mainwindow.h
  mdp:C:/Users/Administrator/Desktop/Python/qt/texture2/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/texture2_autogen/moc_predefs.h
  mdp:C:/Users/Administrator/Desktop/Python/qt/texture2/displayscreen.h
  mdp:C:/Users/Administrator/Desktop/Python/qt/texture2/mainwindow.h
-C:/Users/Administrator/Desktop/Python/qt/texture2/main.cpp
 C:/Users/Administrator/Desktop/Python/qt/texture2/mainwindow.cpp
  uic:./ui_mainwindow.h
+C:/Users/Administrator/Desktop/Python/qt/texture2/main.cpp
 C:/Users/Administrator/Desktop/Python/qt/texture2/displayscreen.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QDebug

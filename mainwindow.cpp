@@ -62,6 +62,7 @@ void MainWindow::on_pushButton_clicked()
 
     ui->label_info->setText(info);
 
+/*
     float aspectRatioW = size.width() / (textureScreen->width());
     float aspectRatioH = size.height() / (textureScreen->height());
 
@@ -70,7 +71,7 @@ void MainWindow::on_pushButton_clicked()
 
     //TODO: Fix aspect ratio
     img = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
-
+*/
     /*
     QTransform transform;
     //transform.translate(250, 250);
@@ -87,7 +88,8 @@ void MainWindow::on_pushButton_clicked()
     */
     //img = transformedPixmap;
 
-    textureScreen->setPixmap(img);
+    textureScreen->setImg(img);
+    //textureScreen->setPixmap(img);
 
 }
 

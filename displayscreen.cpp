@@ -6,7 +6,7 @@ DisplayScreen::DisplayScreen()
     setMouseTracking(true);
     setAttribute(Qt::WA_TranslucentBackground);
     cropStart = QPoint(-1,-1);
-    cropSsize = QPoint(-1,-1);
+    cropSize = QPoint(-1,-1);
 }
 
 void DisplayScreen::setImg(QPixmap pixmap)
@@ -78,11 +78,16 @@ void DisplayScreen::paintEvent(QPaintEvent *event)
     }
     QPainter painter(this);
 
-    QSize size =  img.size();
-    float aspectRatioW = size.width() / (this->width());
-    float aspectRatioH = size.height() / (this->height());
+    QSize size = img.size();
+
+    //float aspectRatioW = size.width() / (this->width());
+    //float aspectRatioH = size.height() / (this->height());
+
+    float aspectRatioW = size.width() / float(this->width());
+    float aspectRatioH = size.height() / float(this->height());
 
     QPixmap imgT = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
+
 
     painter.setTransform(transform, true);
 
@@ -93,15 +98,17 @@ void DisplayScreen::paintEvent(QPaintEvent *event)
         if(cropStart.x() == 0 && cropStart.y() == 0){
             this->cropStart = QPoint(100,100);
         }
-        if(cropSsize.x() == 0 && cropSsize.y() == 0){
-            this->cropSsize = QPoint(300,300);
+        if(cropSize.x() == 0 && cropSize.y() == 0){
+            this->cropSize = QPoint(300,300);
         }
 
         // Fill the entire widget with a solid color overlay
-        QRect top(0,(height() / 2) - (imgT.height() / 2),imgT.width(),cropStart.y());
-        QRect left(0,(height() / 2) - (imgT.height() / 2) + cropStart.y(),cropStart.x(),cropSsize.y());
-        QRect right(cropStart.x() + cropSsize.x(),(height() / 2) - (imgT.height() / 2) + cropStart.y(),imgT.width() - cropSsize.x() - cropStart.x(),cropSsize.y());
-        QRect bot(0,(height() / 2) - (imgT.height() / 2) + cropStart.y() + cropSsize.y(),imgT.width(),imgT.height() - cropSsize.y() - cropStart.y());
+        QRect top(0,(height() / 2.0f) - (imgT.height() / 2.0f),imgT.width(),cropStart.y());
+        QRect left(0,(height() / 2.0f) - (imgT.height() / 2.0f) + cropStart.y(),cropStart.x(),cropSize.y());
+        QRect right(cropStart.x() + cropSize.x(),(height() / 2.0f) - (imgT.height() / 2.0f) + cropStart.y(),imgT.width() - cropSize.x() - cropStart.x(),cropSize.y());
+        QRect bot(0,(height() / 2.0f) - (imgT.height() / 2.0f) + cropStart.y() + cropSize.y(),imgT.width(),imgT.height() - cropSize.y() - cropStart.y());
+
+
 
         painter.fillRect(top, QColor(0,0,255,120));
         painter.fillRect(left, QColor(0,255,0,120));
@@ -131,25 +138,6 @@ void DisplayScreen::mousePressEvent(QMouseEvent *eventPress)
     qDebug() << "pressed " << eventPress->pos();
     mousePos = eventPress->pos();
     mouseStartPos = eventPress->pos();
-
-    if(isCropping){
-        //cropStart = eventPress->pos();
-
-        QSize size =  img.size();
-        float aspectRatioW = size.width() / (this->width());
-        float aspectRatioH = size.height() / (this->height());
-
-        QPixmap imgT = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
-        double scaleY = transform.m22();
-        float dy = (height() / 2) - (imgT.height() / 2);
-        dy *= scaleY;
-
-        //QPoint start = transform.map(cropStart);
-
-        //qDebug() << "crop start: " << start;
-        //qDebug() << "translation x: " << cropStart.x() - transform.dx();
-        //qDebug() << "translation y: " << cropStart.y() - (transform.dy() + dy);
-    }
 }
 
 void DisplayScreen::mouseMoveEvent(QMouseEvent *event)
@@ -168,22 +156,32 @@ void DisplayScreen::mouseMoveEvent(QMouseEvent *event)
     QPixmap imgT = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
 
     if(isCropping){
-        cropSsize = transform.map(mousePos) - transform.map(mouseStartPos);
-        //cropSsize = mousePos - mouseStartPos;
+        //cropSsize = transform.map(mousePos) - transform.map(mouseStartPos);
+        cropSize = mousePos - mouseStartPos;
+        double scaleX = transform.m11();
         double scaleY = transform.m22();
-        float dy = (height() / 2) - (imgT.height() / 2);
+        float dy = (height() / 2.0f) - (imgT.height() / 2.0f);
         dy *= scaleY;
 
-        QPoint start = transform.map(mouseStartPos);
-
-        qDebug() << "crop : " << start;
-        qDebug() << "translation x: " << mouseStartPos.x() - transform.dx();
-        qDebug() << "translation y: " << mouseStartPos.y() - (transform.dy() + dy);
+        //QPoint start = transform.map(mouseStartPos);
 
         cropStart = QPoint(mouseStartPos.x() - transform.dx(), mouseStartPos.y() - (transform.dy() + dy));
-        //cropStart = mouseStartPos;
-        QPoint newPoint = transform.map(cropSsize);
-        qDebug() << "crop size : " << cropSsize;
+        cropStart = QPoint(cropStart.x() / scaleX, cropStart.y() / scaleY);
+
+        cropSize = QPoint(cropSize.x() / scaleX, cropSize.y() / scaleY);
+
+        if(cropSize.x() < 0 || cropSize.y() < 0){
+            //cropStart = QPoint(cropStart.y(),cropStart.x());
+        }
+
+        qDebug() << "mouseStartPos " << cropStart;
+        if(mouseStartPos.y() > mousePos.y()){
+            //cropStart = QPoint(cropStart.x(), cropStart.y() + cropSize.y());
+            qDebug() << "mouseStartPos " << mouseStartPos;
+            qDebug() << "mousePos " << mousePos;
+        }
+
+        //cropSize = QPoint(qAbs(cropSize.x()), qAbs(cropSize.y()));
         this->update();
         return;
     }
