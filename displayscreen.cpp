@@ -1,5 +1,6 @@
 #include "displayscreen.h"
 #include <QColor>
+#include <QApplication>
 
 DisplayScreen::DisplayScreen()
 {
@@ -7,11 +8,19 @@ DisplayScreen::DisplayScreen()
     setAttribute(Qt::WA_TranslucentBackground);
     cropStart = QPoint(-1,-1);
     cropSize = QPoint(-1,-1);
+
+    setFocusPolicy(Qt::StrongFocus);
+    setFocus();
 }
 
 void DisplayScreen::setImg(QPixmap pixmap)
 {
     img = pixmap;
+    isCropping = false;
+    cropStart = QPoint(-1,-1);
+    cropSize = QPoint(-1,-1);
+    QPixmap imgT = img.scaled(width(), height(), Qt::KeepAspectRatio);
+    transform.translate(0,(height() / 2.0f) - (imgT.height() / 2.0f));
 }
 
 void DisplayScreen::resetTransform()
@@ -25,14 +34,6 @@ void DisplayScreen::toggleCropping()
     this->update();
 };
 
-void DisplayScreen::enterEvent(QEnterEvent *ev){
-    qDebug() << "enter";
-}
-
-void DisplayScreen::leaveEvent(QEvent *ev){
-    qDebug() << "exit";
-}
-
 void DisplayScreen::wheelEvent(QWheelEvent *event)
 {
     QPoint numDegrees = event->angleDelta() / 8;
@@ -44,31 +45,61 @@ void DisplayScreen::wheelEvent(QWheelEvent *event)
     float aspectRatioW = size.width() / (this->width());
     float aspectRatioH = size.height() / (this->height());
 
-    QPixmap imgT = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
+    QPointF pos = event->position();
+
+    QPixmap imgT = img.scaled((size.width() / aspectRatioW) * transform.m11(), (size.height() / aspectRatioH) * transform.m22(), Qt::KeepAspectRatio);
 
     if (numDegrees.y() != 0) {
         double scaleFactor = (numDegrees.y() > 0) ? (16.0 / numDegrees.y()) : (14.0 / -numDegrees.y());
 
+        float offsetx = (width() / 2) - pos.x();
+        float offsety = (height() / 2) - pos.y();
+        QPointF offset2 = QPointF((width() / 2) - pos.x() , (height() / 2) - pos.y());
+
+        //
+        double scaleX = transform.m11();
+        double scaleY = transform.m22();
+        float dy = (height() / 2.0f) - (imgT.height() / 2.0f);
+        dy *= scaleY;
+
+        QPoint a = QPoint(pos.x() - transform.dx(), pos.y() - (transform.dy() + dy));
+        a = QPoint(a.x() / scaleX, a.y() / scaleY);
+
+        QPoint b(imgT.width() / 2, imgT.height() / 2);
+        QPoint c = a - b;
+        //
+
+        QPointF scenePosBeforeZoom = transform.inverted().map(offset2);
+        //QPointF scenePosBeforeZoom = QPointF(offset2.x() / transform.m11(), offset2.y() / transform.m22());
+        // Apply scaling
+        //transform.translate((imgT.width() / 2.0) - c.x(), (imgT.height() / 2.0) - c.y());
         transform.translate(imgT.width() / 2.0, imgT.height() / 2.0);
         transform.scale(scaleFactor, scaleFactor);
+        c = QPoint(c.x() * transform.m11(), c.y() * transform.m22());
         transform.translate(-imgT.width() / 2.0, -imgT.height() / 2.0);
+        //transform.translate((-imgT.width() / 2.0) + c.x(), (-imgT.height() / 2.0) + c.y());
+
+        // Convert the position back and adjust translation
+        QPointF scenePosAfterZoom = transform.inverted().map(offset2);
+        //QPointF scenePosAfterZoom = QPointF(offset2.x() / transform.m11(), offset2.y() / transform.m22());
+
+        QPointF offset = scenePosAfterZoom - scenePosBeforeZoom;
+
+        qDebug() << a - b;
+
+        if(numDegrees.y() > 0){
+            //transform.translate(-offsetx / 10, -offsety / 10);
+            //transform.translate(-offset.x(), -offset.y());
+            //transform.translate(-c.x() / 10, -c.y() / 10);
+        }
+        else{
+            //transform.translate(offsetx / 10, offsety / 10);
+            //transform.translate(offset.x(), offset.y());
+            //transform.translate(c.x() / 10, c.y() / 10);
+        }
+
     }
-
-    QPixmap transformedPixmap(imgT.size());
-    transformedPixmap.fill(Qt::transparent);
-
-    QPainter painter(&transformedPixmap);
-    //painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.setTransform(transform, true);
-
-    painter.drawPixmap(0, 0, imgT);
-    painter.end();
-
-    imgT = transformedPixmap;
-
-    this->setPixmap(imgT);
-
-    event->accept();
+    this->update();
 }
 
 void DisplayScreen::paintEvent(QPaintEvent *event)
@@ -78,58 +109,64 @@ void DisplayScreen::paintEvent(QPaintEvent *event)
     }
     QPainter painter(this);
 
-    QSize size = img.size();
-
-    //float aspectRatioW = size.width() / (this->width());
-    //float aspectRatioH = size.height() / (this->height());
-
-    float aspectRatioW = size.width() / float(this->width());
-    float aspectRatioH = size.height() / float(this->height());
-
-    QPixmap imgT = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
-
+    QPixmap imgT = img.scaled(width() * transform.m11(), height() * transform.m22(), Qt::KeepAspectRatio);
 
     painter.setTransform(transform, true);
 
     if (!imgT.isNull()) {
-        painter.drawPixmap(0, (height() / 2) - (imgT.height() / 2), imgT);
+        painter.drawPixmap(0, 0, imgT);
     }
     if (isCropping) {
-        if(cropStart.x() == 0 && cropStart.y() == 0){
+
+        if(cropStart.x() == -1 && cropStart.y() == -1){
             this->cropStart = QPoint(100,100);
         }
-        if(cropSize.x() == 0 && cropSize.y() == 0){
+        if(cropSize.x() == -1 && cropSize.y() == -1){
             this->cropSize = QPoint(300,300);
         }
 
-        // Fill the entire widget with a solid color overlay
-        QRect top(0,(height() / 2.0f) - (imgT.height() / 2.0f),imgT.width(),cropStart.y());
-        QRect left(0,(height() / 2.0f) - (imgT.height() / 2.0f) + cropStart.y(),cropStart.x(),cropSize.y());
-        QRect right(cropStart.x() + cropSize.x(),(height() / 2.0f) - (imgT.height() / 2.0f) + cropStart.y(),imgT.width() - cropSize.x() - cropStart.x(),cropSize.y());
-        QRect bot(0,(height() / 2.0f) - (imgT.height() / 2.0f) + cropStart.y() + cropSize.y(),imgT.width(),imgT.height() - cropSize.y() - cropStart.y());
+        QPointF startRatio = QPointF((static_cast<double>(cropStartRatio.x())) * imgT.width() ,
+                                     (static_cast<double>(cropStartRatio.y())) * imgT.height());
 
+        QPointF sizeRatio =  QPointF((static_cast<double>(cropSizeRatio.x())) * imgT.width() ,
+                                    (static_cast<double>(cropSizeRatio.y())) * imgT.height() );
 
+        QRect top(0,0,imgT.width(),startRatio.y());
+        QRect left(0,startRatio.y(),startRatio.x(),sizeRatio.y());
+        QRect right(startRatio.x() + sizeRatio.x(),startRatio.y(),imgT.width() - sizeRatio.x() - startRatio.x(),sizeRatio.y());
+        QRect bot(0,startRatio.y() + sizeRatio.y(),imgT.width(),imgT.height() - sizeRatio.y() - startRatio.y());
 
-        painter.fillRect(top, QColor(0,0,255,120));
-        painter.fillRect(left, QColor(0,255,0,120));
-        painter.fillRect(right, QColor(255,0,0,120));
-        painter.fillRect(bot, QColor(255,0,255,120));
+        QColor fade(50,50,50,150);
+        painter.fillRect(top, fade);
+        painter.fillRect(left, fade);
+        painter.fillRect(right, fade);
+        painter.fillRect(bot, fade);
+    }
+}
 
-        // Get the image position and size
-        int imgX = (width() - imgT.width()) / 2;
-        int imgY = (height() - imgT.height()) / 2;
-        int imgW = imgT.width();
-        int imgH = imgT.height();
+bool DisplayScreen::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type()==QEvent::KeyPress) {
+        qDebug() << "KeyPress";
+        QKeyEvent* key = static_cast<QKeyEvent*>(event);
+        if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {
+            //Enter or return was pressed
+            qDebug() << "enter";
+        } else {
+            return QObject::eventFilter(obj, event);
+        }
+        return true;
+    } else {
+        return QObject::eventFilter(obj, event);
+    }
+    return false;
+}
 
-        // Set composition mode to clear the inside area
-        painter.setCompositionMode(QPainter::CompositionMode_Clear);
-        //painter.fillRect(imgX, imgY, imgW - 50, imgH - 50, Qt::transparent);
-
-        // Reset the composition mode to normal for future drawing
-        //painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-
-        // Draw the image
-        //painter.drawPixmap(imgX, imgY, imgT);
+void DisplayScreen::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << "Key Pressed!";
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+        qDebug() << "Enter key detected!";
     }
 }
 
@@ -149,63 +186,79 @@ void DisplayScreen::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    QSize size =  img.size();
-    float aspectRatioW = size.width() / (this->width());
-    float aspectRatioH = size.height() / (this->height());
+    //QPixmap imgT2 = img.scaled(width() * transform.m11(), height() * transform.m22(), Qt::KeepAspectRatio);
 
-    QPixmap imgT = img.scaled(size.width() / aspectRatioW, size.height() / aspectRatioH, Qt::KeepAspectRatio);
+    QPixmap imgT = img.scaled(width(), height(), Qt::KeepAspectRatio);
 
     if(isCropping){
-        //cropSsize = transform.map(mousePos) - transform.map(mouseStartPos);
         cropSize = mousePos - mouseStartPos;
         double scaleX = transform.m11();
         double scaleY = transform.m22();
-        float dy = (height() / 2.0f) - (imgT.height() / 2.0f);
-        dy *= scaleY;
 
-        //QPoint start = transform.map(mouseStartPos);
+        cropStart = mouseStartPos;
+        cropStart = QPointF(cropStart.x() - transform.dx(), cropStart.y() - transform.dy());
 
-        cropStart = QPoint(mouseStartPos.x() - transform.dx(), mouseStartPos.y() - (transform.dy() + dy));
-        cropStart = QPoint(cropStart.x() / scaleX, cropStart.y() / scaleY);
+        QPointF cropEnd(mousePos);
+        cropEnd = QPointF(cropEnd.x() - transform.dx(), cropEnd.y() - transform.dy());
 
-        cropSize = QPoint(cropSize.x() / scaleX, cropSize.y() / scaleY);
 
-        if(cropSize.x() < 0 || cropSize.y() < 0){
-            //cropStart = QPoint(cropStart.y(),cropStart.x());
+        if(cropStart.y() < 0){
+            cropStart = QPointF(cropStart.x(), 0);
+        }
+        if(cropEnd.y() < 0){
+            cropEnd = QPointF(cropEnd.x(), 0);
         }
 
-        qDebug() << "mouseStartPos " << cropStart;
+        if(cropStart.x() < 0){
+            cropStart = QPointF(0, cropStart.y());
+        }
+        if(cropEnd.x() < 0){
+            cropEnd = QPointF(0, cropEnd.y());
+        }
+
+        if(cropEnd.x() > imgT.width() * scaleX * scaleX){
+            cropEnd = QPointF(imgT.width() * scaleX * scaleX,cropEnd.y());
+        }
+
+        if(cropEnd.y() > imgT.height() * scaleX * scaleX){
+            cropEnd = QPointF(cropEnd.x(),imgT.height() * scaleX * scaleX);
+        }
+
+        if(cropStart.y() > imgT.height() * scaleX * scaleX){
+            cropStart = QPointF(cropStart.x(), imgT.height() * scaleX * scaleX);
+        }
+        if(cropStart.x() > imgT.width() * scaleX * scaleX){
+            cropStart = QPointF(imgT.width() * scaleX * scaleX, cropStart.y());
+        }
+
+        cropSize = cropEnd - cropStart;
+        cropSize = QPointF(cropSize.x() / scaleX, cropSize.y() / scaleY);
+
         if(mouseStartPos.y() > mousePos.y()){
-            //cropStart = QPoint(cropStart.x(), cropStart.y() + cropSize.y());
-            qDebug() << "mouseStartPos " << mouseStartPos;
-            qDebug() << "mousePos " << mousePos;
+            cropStart = QPointF(cropStart.x(), cropStart.y() + cropSize.y() * scaleX);
+        }
+        if(mouseStartPos.x() > mousePos.x()){
+            cropStart = QPointF(cropStart.x() + cropSize.x() * scaleX, cropStart.y());
         }
 
-        //cropSize = QPoint(qAbs(cropSize.x()), qAbs(cropSize.y()));
+        cropSize = QPoint(qAbs(cropSize.x()), qAbs(cropSize.y()));
+
+        cropStartRatio = QPointF((static_cast<double>(cropStart.x()) / (imgT.width() * scaleX * scaleX)),
+                                 (static_cast<double>(cropStart.y()) / (imgT.height() * scaleX * scaleX)));
+
+        cropSizeRatio = QPointF((static_cast<double>(cropSize.x()) / (imgT.width() * scaleX )),
+                                 (static_cast<double>(cropSize.y()) / (imgT.height() * scaleX )));
+
         this->update();
         return;
     }
 
-    QPixmap transformedPixmap(imgT.size());
-    transformedPixmap.fill(Qt::transparent);
-
-    QPainter painter(&transformedPixmap);
 
     double scaleX = transform.m11();
     double scaleY = transform.m22();
 
     transform.translate(-offset.x() / scaleX, -offset.y() / scaleY);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.setTransform(transform, true);
-
-    painter.drawPixmap(0, 0, imgT);
-    painter.end();
-
-    imgT = transformedPixmap;
-
-    this->setPixmap(imgT);
-
-    qDebug() << offset;
+    this->update();
 }
 
 void DisplayScreen::mouseReleaseEvent(QMouseEvent *releaseEvent)

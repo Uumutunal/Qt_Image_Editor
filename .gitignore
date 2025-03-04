@@ -10,12 +10,6 @@
 *.dll
 *.dylib
 
-build*/
-cmake-build-*/
-dist*/
-bin/
-lib/
-
 # Qt-es
 object_script.*.Release
 object_script.*.Debug
@@ -57,4 +51,25 @@ compile_commands.json
 # QtCreator local machine specific files for imported projects
 *creator.user*
 
+# Ignore additional build artifacts
+build*/
+cmake-build-*/
+dist*/
+bin/
+lib/
+
+# Ignore CMake build files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# Ignore logs & debug files
+*.log
+*.dbg
+*.dmp
+
+# Ignore resource cache files
+.qrc
+*_qrc.qm
+*_qrc.qrc
 *_qmlcache.qrc
