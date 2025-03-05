@@ -20,12 +20,27 @@ void DisplayScreen::setImg(QPixmap pixmap)
     cropStart = QPoint(-1,-1);
     cropSize = QPoint(-1,-1);
     QPixmap imgT = img.scaled(width(), height(), Qt::KeepAspectRatio);
+    transform.reset();
     transform.translate(0,(height() / 2.0f) - (imgT.height() / 2.0f));
+    this->update();
 }
 
 void DisplayScreen::resetTransform()
 {
     transform.reset();
+}
+
+QRect DisplayScreen::getCropRegion()
+{
+    QPointF startRatio = QPointF((static_cast<double>(cropStartRatio.x())) * img.width() ,
+                                 (static_cast<double>(cropStartRatio.y())) * img.height());
+
+    QPointF sizeRatio =  QPointF((static_cast<double>(cropSizeRatio.x())) * img.width() ,
+                                (static_cast<double>(cropSizeRatio.y())) * img.height() );
+
+    QRect cropRegion(startRatio.x(), startRatio.y(), sizeRatio.x(), sizeRatio.y());
+
+    return cropRegion;
 }
 
 void DisplayScreen::toggleCropping()

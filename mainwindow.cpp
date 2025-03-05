@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     textureScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     //myWidget->show();
 
+    ui->pushButton_apply->setEnabled(false);
+
 
     ui->verticalLayout->addWidget(textureScreen);
     //this->layout()->addWidget(myWidget);
@@ -32,8 +34,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -48,7 +48,7 @@ void MainWindow::on_pushButton_clicked()
     QPixmap img(fileName);
     QImage img2(fileName);
     image = img2;
-
+    originalImage = img2;
     //TODO: not accessible
     img = QPixmap::fromImage(img2);
 
@@ -67,7 +67,6 @@ void MainWindow::on_pushButton_clicked()
     textureScreen->resetTransform();
     textureScreen->setImg(img);
 }
-
 
 void MainWindow::on_pushButton_save_clicked()
 {
@@ -92,11 +91,31 @@ void MainWindow::on_pushButton_save_clicked()
     }
 }
 
-
-
-
 void MainWindow::on_pushButton_crop_clicked()
 {
+    if(image.isNull()){
+        return;
+    }
     textureScreen->toggleCropping();
+    ui->pushButton_apply->setEnabled(!ui->pushButton_apply->isEnabled());
+}
+
+
+void MainWindow::on_pushButton_apply_clicked()
+{
+    QRect cropRect = textureScreen->getCropRegion();
+    QImage croppedImage = image.copy(cropRect);
+    QPixmap img = QPixmap::fromImage(croppedImage);
+    image = croppedImage;
+    textureScreen->setImg(img);
+    ui->pushButton_apply->setEnabled(false);
+
+}
+
+
+void MainWindow::on_pushButton_revert_clicked()
+{
+    image = originalImage;
+    textureScreen->setImg(QPixmap::fromImage(image));
 }
 

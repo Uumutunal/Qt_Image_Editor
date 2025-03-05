@@ -15,7 +15,7 @@ public:
 
     void setImg(QPixmap pixmap);
     void resetTransform();
-
+    QRect getCropRegion();
     void toggleCropping();
 
     QPixmap img;

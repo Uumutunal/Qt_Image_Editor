@@ -27,9 +27,14 @@ private slots:
 
     void on_pushButton_crop_clicked();
 
+    void on_pushButton_apply_clicked();
+
+    void on_pushButton_revert_clicked();
+
 private:
     Ui::MainWindow *ui;
     QImage image;
+    QImage originalImage;
     DisplayScreen *textureScreen;
     QString imageTypes = "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg);;BMP Files (*.bmp);;TIFF Files (*.tiff *.tif);;All Files (*)";
 };
