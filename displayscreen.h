@@ -20,6 +20,10 @@ public:
 
     QPixmap img;
 
+    QSize resizedSize;
+    void setRSize(QSize rSize);
+    void reSize(QImage originalImage);
+
 protected:
     void wheelEvent (QWheelEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;

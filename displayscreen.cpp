@@ -47,6 +47,11 @@ void DisplayScreen::toggleCropping()
 {
     isCropping = !isCropping;
     this->update();
+}
+
+void DisplayScreen::reSize(QImage originalImage)
+{
+    img = QPixmap::fromImage(originalImage).scaled(resizedSize.width(), resizedSize.height());
 };
 
 void DisplayScreen::wheelEvent(QWheelEvent *event)

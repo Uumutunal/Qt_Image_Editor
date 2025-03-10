@@ -4,7 +4,7 @@
 #include <QPixmap>
 #include <filesystem>
 #include <QPainter>
-
+#include "resizedialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -117,5 +117,20 @@ void MainWindow::on_pushButton_revert_clicked()
 {
     image = originalImage;
     textureScreen->setImg(QPixmap::fromImage(image));
+}
+
+
+void MainWindow::on_pushButton_rescale_clicked()
+{
+    resizeDialog resize;
+    resize.setSize(image.size());
+
+    if (resize.exec() == QDialog::Accepted) {
+        QSize newSize = resize.getSize();
+        textureScreen->resizedSize = newSize;
+        textureScreen->reSize(originalImage);
+        qDebug() << "Selected size:" << newSize;
+    }
+
 }
 

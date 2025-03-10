@@ -91,6 +91,13 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="pushButton_rescale">
+        <property name="text">
+         <string>Rescale</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

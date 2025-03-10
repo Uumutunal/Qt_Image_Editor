@@ -31,6 +31,8 @@ private slots:
 
     void on_pushButton_revert_clicked();
 
+    void on_pushButton_rescale_clicked();
+
 private:
     Ui::MainWindow *ui;
     QImage image;
