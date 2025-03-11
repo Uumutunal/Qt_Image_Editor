@@ -25,6 +25,9 @@
         <property name="text">
          <string>Open Texture</string>
         </property>
+        <property name="shortcut">
+         <string>Ctrl+A</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -51,6 +54,9 @@
        <widget class="QPushButton" name="pushButton_save">
         <property name="text">
          <string>Save</string>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+S</string>
         </property>
        </widget>
       </item>

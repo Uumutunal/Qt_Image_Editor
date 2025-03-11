@@ -14,17 +14,11 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0" colspan="2">
-    <widget class="QSplitter" name="splitter">
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="pushButton_cancel">
+     <property name="text">
+      <string>Cancel</string>
      </property>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>X:</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_x"/>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
@@ -40,17 +34,33 @@
      <widget class="QLineEdit" name="lineEdit_y"/>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="0" column="0" colspan="2">
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>X:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_x"/>
+    </widget>
+   </item>
+   <item row="3" column="0">
     <widget class="QPushButton" name="pushButton_apply">
      <property name="text">
       <string>Apply</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="pushButton_cancel">
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="checkBox_keepAspectRatio">
      <property name="text">
-      <string>Cancel</string>
+      <string>Keep Aspect Ratio</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

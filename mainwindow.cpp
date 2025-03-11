@@ -129,6 +129,7 @@ void MainWindow::on_pushButton_rescale_clicked()
         QSize newSize = resize.getSize();
         textureScreen->resizedSize = newSize;
         textureScreen->reSize(originalImage);
+        image = image.scaled(newSize);
         qDebug() << "Selected size:" << newSize;
     }
 
