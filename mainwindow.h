@@ -6,6 +6,8 @@
 #include <QLabel>
 #include <QDebug>
 #include "displayscreen.h"
+#include "hsvdialog.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -33,12 +35,16 @@ private slots:
 
     void on_pushButton_rescale_clicked();
 
+    void on_pushButton_HSV_clicked();
+
 private:
     Ui::MainWindow *ui;
     QImage image;
     QImage originalImage;
     DisplayScreen *textureScreen;
     QString imageTypes = "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg);;BMP Files (*.bmp);;TIFF Files (*.tiff *.tif);;All Files (*)";
+
+    HSVDialog *hsvDialog;
 };
 
 

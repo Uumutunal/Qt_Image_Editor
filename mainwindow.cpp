@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->verticalLayout->addWidget(textureScreen);
     //this->layout()->addWidget(myWidget);
+
+    hsvDialog = new HSVDialog;
 }
 
 MainWindow::~MainWindow()
@@ -133,5 +135,11 @@ void MainWindow::on_pushButton_rescale_clicked()
         qDebug() << "Selected size:" << newSize;
     }
 
+}
+
+
+void MainWindow::on_pushButton_HSV_clicked()
+{
+    hsvDialog->show();
 }
 

@@ -37,6 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         displayscreen.h displayscreen.cpp
         resizedialog.h resizedialog.cpp resizedialog.ui
+        hsvdialog.h hsvdialog.cpp hsvdialog.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET texture2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
