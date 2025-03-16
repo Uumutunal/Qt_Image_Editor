@@ -9,8 +9,14 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , hsvDialog(new HSVDialog(this))
 {
     ui->setupUi(this);
+
+    connect(hsvDialog, &HSVDialog::valueChanged, this, &MainWindow::updateHSV);
+
+    hsvProcess = new hsv_opengl();
+
     //ui->label->resize(400,400);
     //ui->label->setStyleSheet("QLabel { background-color : gray; }");
 
@@ -28,8 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->verticalLayout->addWidget(textureScreen);
     //this->layout()->addWidget(myWidget);
-
-    hsvDialog = new HSVDialog;
 }
 
 MainWindow::~MainWindow()
@@ -137,9 +141,61 @@ void MainWindow::on_pushButton_rescale_clicked()
 
 }
 
-
 void MainWindow::on_pushButton_HSV_clicked()
 {
     hsvDialog->show();
+}
+
+void MainWindow::updateHSV(int index, int value)
+{
+    if(index == 0){
+        hsv[index] = (value / 200.0f) * 360.0;
+    }
+    else{
+        hsv[index] = value / 100.0f;
+    }
+
+    qDebug() << hsv[0] << " " << hsv[1] << " " << hsv[2];
+
+    if(!image.isNull()){
+        //image = adjustHSV();
+        //textureScreen->setImg(QPixmap::fromImage(adjustHSV()));
+
+        if (image.format() != QImage::Format_RGBA8888) {
+            image = image.convertToFormat(QImage::Format_RGBA8888);
+        }
+
+        hsvProcess->processImage(image, hsv[0], hsv[1],hsv[2]);
+        QImage result = hsvProcess->getResult();
+        textureScreen->updateHSV(QPixmap::fromImage(result));
+    }
+
+}
+
+QImage MainWindow::adjustHSV()
+{
+    QImage newImage = image.convertToFormat(QImage::Format_RGB32);
+/*
+    for (int y = 0; y < newImage.height(); ++y)
+    {
+        for (int x = 0; x < newImage.width(); ++x)
+        {
+            QColor color = newImage.pixelColor(x, y);
+
+            int h, s, v;
+            color.getHsv(&h, &s, &v); // Get HSV values
+
+            h = (h + hsv[0]) % 360;
+            if (h < 0) h += 360;  // Ensure hue stays in [0, 359]
+
+            s = qBound(0, s + hsv[1], 255); // Clamp Saturation
+            v = qBound(0, v + hsv[2], 255);      // Clamp Value
+
+            color.setHsv(h, s, v);
+            newImage.setPixelColor(x, y, color);
+        }
+    }
+*/
+    return newImage;
 }
 

@@ -7,6 +7,7 @@
 #include <QDebug>
 #include "displayscreen.h"
 #include "hsvdialog.h"
+#include "hsv_opengl.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -37,6 +38,8 @@ private slots:
 
     void on_pushButton_HSV_clicked();
 
+    void updateHSV(int index, int value);
+
 private:
     Ui::MainWindow *ui;
     QImage image;
@@ -45,6 +48,12 @@ private:
     QString imageTypes = "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg);;BMP Files (*.bmp);;TIFF Files (*.tiff *.tif);;All Files (*)";
 
     HSVDialog *hsvDialog;
+
+    QImage adjustHSV();
+
+    hsv_opengl *hsvProcess;
+
+    float hsv[3] = {0,1,1};
 };
 
 

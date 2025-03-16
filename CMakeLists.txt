@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+find_package(Qt6 REQUIRED COMPONENTS Widgets OpenGL OpenGLWidgets)
+
 #set(OpenCV_DIR "C:/Users/Administrator/Downloads/openCV/opencv/build")
 #set(OpenCV_DIR "C:/Users/Administrator/Desktop/Python/vcpkg/vcpkg/packages/opencv_x64-windows/share/opencv")
 #find_package(OpenCV REQUIRED)
@@ -38,6 +40,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         displayscreen.h displayscreen.cpp
         resizedialog.h resizedialog.cpp resizedialog.ui
         hsvdialog.h hsvdialog.cpp hsvdialog.ui
+        hsvShader.frag
+        hsv_opengl.h hsv_opengl.cpp
+        hsvShader.vert
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET texture2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -58,6 +63,8 @@ else()
 endif()
 
 target_link_libraries(texture2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+target_link_libraries(texture2 PRIVATE Qt6::OpenGLWidgets Qt6::OpenGL)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

@@ -23,6 +23,7 @@ public:
     QSize resizedSize;
     void setRSize(QSize rSize);
     void reSize(QImage originalImage);
+    void updateHSV(QPixmap pixmap);
 
 protected:
     void wheelEvent (QWheelEvent *event) override;

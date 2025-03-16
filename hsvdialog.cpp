@@ -2,6 +2,7 @@
 #include "ui_hsvdialog.h"
 #include <QIntValidator>
 
+
 HSVDialog::HSVDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::HSVDialog)
@@ -35,6 +36,8 @@ void HSVDialog::on_horizontalSlider_hue_sliderMoved(int position)
     QString info;
     QTextStream(&info) << position;
     ui->lineEdit_hue->setText(info);
+
+    emit valueChanged(0, position);
 }
 
 void HSVDialog::on_horizontalSlider_saturation_sliderMoved(int position)
@@ -42,6 +45,8 @@ void HSVDialog::on_horizontalSlider_saturation_sliderMoved(int position)
     QString info;
     QTextStream(&info) << position;
     ui->lineEdit_saturation->setText(info);
+
+    emit valueChanged(1, position);
 }
 
 
@@ -50,23 +55,31 @@ void HSVDialog::on_horizontalSlider_value_sliderMoved(int position)
     QString info;
     QTextStream(&info) << position;
     ui->lineEdit_value->setText(info);
+
+    emit valueChanged(2, position);
 }
 
 
 void HSVDialog::on_lineEdit_hue_textEdited(const QString &arg1)
 {
     ui->horizontalSlider_hue->setSliderPosition(arg1.toInt());
+
+    emit valueChanged(0, arg1.toInt());
 }
 
 
 void HSVDialog::on_lineEdit_saturation_textEdited(const QString &arg1)
 {
     ui->horizontalSlider_saturation->setSliderPosition(arg1.toInt());
+
+    emit valueChanged(1, arg1.toInt());
 }
 
 
 void HSVDialog::on_lineEdit_value_textEdited(const QString &arg1)
 {
     ui->horizontalSlider_value->setSliderPosition(arg1.toInt());
+
+    emit valueChanged(2, arg1.toInt());
 }
 

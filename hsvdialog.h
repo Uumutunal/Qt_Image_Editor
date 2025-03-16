@@ -15,6 +15,9 @@ public:
     explicit HSVDialog(QWidget *parent = nullptr);
     ~HSVDialog();
 
+signals:
+    void valueChanged(int index, int newValue);
+
 private slots:
     void on_pushButton_accept_clicked();
 
@@ -34,10 +37,6 @@ private slots:
 
 private:
     Ui::HSVDialog *ui;
-
-    float hue;
-    float saturation;
-    float value;
 };
 
 #endif // HSVDIALOG_H

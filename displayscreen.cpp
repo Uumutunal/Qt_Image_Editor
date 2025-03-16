@@ -52,6 +52,12 @@ void DisplayScreen::toggleCropping()
 void DisplayScreen::reSize(QImage originalImage)
 {
     img = QPixmap::fromImage(originalImage).scaled(resizedSize.width(), resizedSize.height());
+}
+
+void DisplayScreen::updateHSV(QPixmap pixmap)
+{
+    img = pixmap;
+    this->update();
 };
 
 void DisplayScreen::wheelEvent(QWheelEvent *event)
