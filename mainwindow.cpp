@@ -10,27 +10,23 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , hsvDialog(new HSVDialog(this))
+
 {
     ui->setupUi(this);
 
     connect(hsvDialog, &HSVDialog::valueChanged, this, &MainWindow::updateHSV);
 
     hsvProcess = new hsv_opengl();
-
-    //ui->label->resize(400,400);
-    //ui->label->setStyleSheet("QLabel { background-color : gray; }");
+    QImage initImg(100,100,QImage::Format_RGBA8888);
+    hsvProcess->processImage(initImg, 0, 1, 1);
 
     textureScreen = new DisplayScreen(this);
-    //myWidget->move(50, 50);
     textureScreen->setStyleSheet("QLabel { background-color : gray; }");
     textureScreen->setMinimumSize(750, 750);
     textureScreen->setMaximumSize(750, 750);
-    //myWidget->resize(500,500);
     textureScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //myWidget->show();
 
     ui->pushButton_apply->setEnabled(false);
-
 
     ui->verticalLayout->addWidget(textureScreen);
     //this->layout()->addWidget(myWidget);
@@ -72,6 +68,8 @@ void MainWindow::on_pushButton_clicked()
 
     textureScreen->resetTransform();
     textureScreen->setImg(img);
+
+    hsvDialog->resetValues();
 }
 
 void MainWindow::on_pushButton_save_clicked()
@@ -123,6 +121,7 @@ void MainWindow::on_pushButton_revert_clicked()
 {
     image = originalImage;
     textureScreen->setImg(QPixmap::fromImage(image));
+    hsvDialog->resetValues();
 }
 
 
@@ -136,7 +135,6 @@ void MainWindow::on_pushButton_rescale_clicked()
         textureScreen->resizedSize = newSize;
         textureScreen->reSize(originalImage);
         image = image.scaled(newSize);
-        qDebug() << "Selected size:" << newSize;
     }
 
 }
@@ -155,47 +153,14 @@ void MainWindow::updateHSV(int index, int value)
         hsv[index] = value / 100.0f;
     }
 
-    qDebug() << hsv[0] << " " << hsv[1] << " " << hsv[2];
-
     if(!image.isNull()){
-        //image = adjustHSV();
-        //textureScreen->setImg(QPixmap::fromImage(adjustHSV()));
-
         if (image.format() != QImage::Format_RGBA8888) {
             image = image.convertToFormat(QImage::Format_RGBA8888);
         }
-
         hsvProcess->processImage(image, hsv[0], hsv[1],hsv[2]);
         QImage result = hsvProcess->getResult();
         textureScreen->updateHSV(QPixmap::fromImage(result));
     }
 
-}
-
-QImage MainWindow::adjustHSV()
-{
-    QImage newImage = image.convertToFormat(QImage::Format_RGB32);
-/*
-    for (int y = 0; y < newImage.height(); ++y)
-    {
-        for (int x = 0; x < newImage.width(); ++x)
-        {
-            QColor color = newImage.pixelColor(x, y);
-
-            int h, s, v;
-            color.getHsv(&h, &s, &v); // Get HSV values
-
-            h = (h + hsv[0]) % 360;
-            if (h < 0) h += 360;  // Ensure hue stays in [0, 359]
-
-            s = qBound(0, s + hsv[1], 255); // Clamp Saturation
-            v = qBound(0, v + hsv[2], 255);      // Clamp Value
-
-            color.setHsv(h, s, v);
-            newImage.setPixelColor(x, y, color);
-        }
-    }
-*/
-    return newImage;
 }
 

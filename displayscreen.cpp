@@ -212,8 +212,6 @@ void DisplayScreen::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    //QPixmap imgT2 = img.scaled(width() * transform.m11(), height() * transform.m22(), Qt::KeepAspectRatio);
-
     QPixmap imgT = img.scaled(width(), height(), Qt::KeepAspectRatio);
 
     if(isCropping){

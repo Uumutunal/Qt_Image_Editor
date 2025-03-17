@@ -48,9 +48,6 @@ private:
     QString imageTypes = "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg);;BMP Files (*.bmp);;TIFF Files (*.tiff *.tif);;All Files (*)";
 
     HSVDialog *hsvDialog;
-
-    QImage adjustHSV();
-
     hsv_opengl *hsvProcess;
 
     float hsv[3] = {0,1,1};

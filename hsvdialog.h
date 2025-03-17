@@ -15,6 +15,8 @@ public:
     explicit HSVDialog(QWidget *parent = nullptr);
     ~HSVDialog();
 
+    void resetValues();
+
 signals:
     void valueChanged(int index, int newValue);
 

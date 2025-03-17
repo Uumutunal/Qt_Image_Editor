@@ -152,6 +152,15 @@ void hsv_opengl::processImage(QImage img, float hue, float saturation, float val
     valAdjust = value;
     this->img = img;
 
+    if(context){
+        context->makeCurrent(surface);
+
+        glBindTexture(GL_TEXTURE_2D, fboTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        context->doneCurrent();
+    }
+
     run();
 }
 

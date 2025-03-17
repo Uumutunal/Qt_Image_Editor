@@ -13,6 +13,25 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #292928;
+
+QPushButton {
+    border-radius: 10px; /* Adjust radius as needed */
+    background-color: #B0B0B0; /* Light gray */
+    color: white;
+    padding: 5px 10px;
+    border: 2px solid #8C8C8C; /* Darker gray border */
+}
+
+QPushButton:hover {
+    background-color: #A0A0A0; /* Slightly darker gray on hover */
+}
+
+QPushButton:pressed {
+    background-color: #909090; /* Even darker gray when pressed */
+}</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="3" column="1">
     <widget class="QPushButton" name="pushButton_cancel">

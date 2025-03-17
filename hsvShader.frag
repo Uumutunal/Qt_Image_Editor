@@ -2,12 +2,11 @@
 in vec2 TexCoords;   // Input texture coordinates from vertex shader
 out vec4 FragColor;   // Final output color
 
-uniform sampler2D image;   // Input texture
-uniform float hueAdjust;   // Hue offset (degrees)
-uniform float satAdjust;   // Saturation multiplier
-uniform float valAdjust;   // Value multiplier
+uniform sampler2D image;
+uniform float hueAdjust;
+uniform float satAdjust;
+uniform float valAdjust;
 
-// Convert RGB to HSV
 vec3 RGBtoHSV(vec3 c) {
     float cMax = max(c.r, max(c.g, c.b));
     float cMin = min(c.r, min(c.g, c.b));
@@ -31,7 +30,7 @@ vec3 RGBtoHSV(vec3 c) {
     return vec3(h, s, v);
 }
 
-// Convert HSV to RGB
+
 vec3 HSVtoRGB(vec3 hsv) {
     float h = hsv.x / 60.0;
     float s = hsv.y;
@@ -57,7 +56,6 @@ void main(void)
 
     vec3 color = texture(image, TexCoords).rgb;
 
-    // Convert to HSV
     vec3 hsv = RGBtoHSV(color);
 
     // Adjust Hue, Saturation, and Value
@@ -68,10 +66,4 @@ void main(void)
     // Convert back to RGB
     vec3 result = HSVtoRGB(hsv);
     FragColor = vec4(result, 1.0);
-
-
-
-    //FragColor = vec4(color, 1.0);
-    //FragColor = vec4(hueAdjust,satAdjust,valAdjust, 1.0);
-    //FragColor = vec4(TexCoords.x, TexCoords.y, 0.0, 1.0);
 }
