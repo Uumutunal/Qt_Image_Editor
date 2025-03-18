@@ -4,6 +4,8 @@
 
 DisplayScreen::DisplayScreen()
 {
+    setStyleSheet(qApp->styleSheet());
+
     setMouseTracking(true);
     setAttribute(Qt::WA_TranslucentBackground);
     cropStart = QPoint(-1,-1);

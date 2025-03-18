@@ -57,6 +57,24 @@ QPushButton:pressed {
    </item>
    <item row="3" column="0">
     <widget class="QPushButton" name="pushButton_accept">
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    border-radius: 5px;
+    background-color: #404141;
+    color: white;
+    padding: 5px 10px;
+    border: 1px solid #8C8C8C;
+}
+
+QPushButton:hover {
+    background-color: #A0A0A0;
+    border: 1px solid #EF6C00;
+}
+
+QPushButton:pressed {
+    background-color: #909090;
+}</string>
+     </property>
      <property name="text">
       <string>Accept</string>
      </property>
@@ -140,6 +158,24 @@ QPushButton:pressed {
    </item>
    <item row="3" column="2">
     <widget class="QPushButton" name="pushButton_cancel">
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    border-radius: 5px;
+    background-color: #404141;
+    color: white;
+    padding: 5px 10px;
+    border: 1px solid #8C8C8C;
+}
+
+QPushButton:hover {
+    background-color: #A0A0A0;
+    border: 1px solid #EF6C00;
+}
+
+QPushButton:pressed {
+    background-color: #909090;
+}</string>
+     </property>
      <property name="text">
       <string>Cancel</string>
      </property>

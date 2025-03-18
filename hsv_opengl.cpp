@@ -1,7 +1,10 @@
 #include "hsv_opengl.h"
 
 hsv_opengl::hsv_opengl(QObject  *parent)  : context(nullptr), surface(nullptr), texture(nullptr),
-    hueAdjust(0.0f), satAdjust(1.0f), valAdjust(1.0f) {}
+    hueAdjust(0.0f), satAdjust(1.0f), valAdjust(1.0f)
+{
+
+}
 
 void hsv_opengl::initializeGL()
 {
@@ -39,11 +42,11 @@ void hsv_opengl::initializeGL()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Load Shader
-    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "C:/Users/Administrator/Desktop/Python/qt/texture2/hsvShader.vert")) {
+    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/hsvShader.vert")) {
         qWarning("Failed to load vertex shader");
     }
 
-    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "C:/Users/Administrator/Desktop/Python/qt/texture2/hsvShader.frag")) {
+    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/hsvShader.frag")) {
         qWarning("Failed to load fragment shader");
     }
 

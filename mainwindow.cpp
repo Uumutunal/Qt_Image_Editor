@@ -10,9 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , hsvDialog(new HSVDialog(this))
-
 {
     ui->setupUi(this);
+    setWindowTitle("Image Editor");
+
+    hsvDialog->setStyleSheet(qApp->styleSheet());
+    hsvDialog->setWindowTitle("HSV Adjust");
 
     connect(hsvDialog, &HSVDialog::valueChanged, this, &MainWindow::updateHSV);
 
@@ -28,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->pushButton_apply->setEnabled(false);
 
+    ui->label_info->setText("");
+
     ui->verticalLayout->addWidget(textureScreen);
-    //this->layout()->addWidget(myWidget);
 }
 
 MainWindow::~MainWindow()
@@ -128,7 +132,9 @@ void MainWindow::on_pushButton_revert_clicked()
 void MainWindow::on_pushButton_rescale_clicked()
 {
     resizeDialog resize;
+    resize.setStyleSheet(qApp->styleSheet());
     resize.setSize(image.size());
+    resize.setWindowTitle("Resize");
 
     if (resize.exec() == QDialog::Accepted) {
         QSize newSize = resize.getSize();

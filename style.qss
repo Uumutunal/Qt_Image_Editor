@@ -1,0 +1,72 @@
+QMainWindow, QDialog, QWidget {
+    background-color: #292928;
+}
+
+QPushButton {
+    border-radius: 5px;
+    background-color: #404141;
+    color: white;
+    padding: 5px 10px;
+    border: 1px solid #8C8C8C;
+}
+
+QPushButton:hover {
+    background-color: #A0A0A0;
+    border: 1px solid #EF6C00;
+}
+
+QPushButton:pressed {
+    background-color: #909090;
+}
+
+QLineEdit {
+    background-color: #3A3A3A;
+    border: 1px solid #8C8C8C;
+    border-radius: 5px;
+    padding: 4px;
+    color: white;
+    selection-background-color: #A0A0A0;
+}
+
+QLabel, QCheckBox{
+    color: white;
+    padding: 4px;
+    background-color: #3A3A3A;
+}
+
+QLineEdit:focus {
+    border: 1px solid #A0A0A0;
+    background-color: #404141;
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #8C8C8C;
+    height: 6px;
+    background: #3A3A3A;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: #A0A0A0;
+    border: 1px solid #8C8C8C;
+    width: 12px;
+    height: 12px;
+    margin: -4px 0;
+    border-radius: 6px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: #C0C0C0;
+}
+
+QSlider::handle:horizontal:pressed {
+    background: #909090;
+}
+
+QSlider::add-page:horizontal {
+    background: #505050;
+}
+
+QSlider::sub-page:horizontal {
+    background: #A0A0A0;
+}

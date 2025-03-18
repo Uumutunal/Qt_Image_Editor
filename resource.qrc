@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/styles">
+        <file>style.qss</file>
+    </qresource>
+    <qresource prefix="/shaders">
+        <file>hsvShader.frag</file>
+        <file>hsvShader.vert</file>
+    </qresource>
+</RCC>
