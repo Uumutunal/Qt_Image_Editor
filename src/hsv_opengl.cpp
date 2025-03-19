@@ -42,11 +42,11 @@ void hsv_opengl::initializeGL()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Load Shader
-    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/hsvShader.vert")) {
+    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/shaders/hsvShader.vert")) {
         qWarning("Failed to load vertex shader");
     }
 
-    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/hsvShader.frag")) {
+    if (!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/shaders/hsvShader.frag")) {
         qWarning("Failed to load fragment shader");
     }
 

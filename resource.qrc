@@ -3,7 +3,7 @@
         <file>style.qss</file>
     </qresource>
     <qresource prefix="/shaders">
-        <file>hsvShader.frag</file>
-        <file>hsvShader.vert</file>
+        <file>shaders/hsvShader.frag</file>
+        <file>shaders/hsvShader.vert</file>
     </qresource>
 </RCC>

@@ -14,38 +14,34 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets OpenGL OpenGLWidgets)
 
-#set(OpenCV_DIR "C:/Users/Administrator/Downloads/openCV/opencv/build")
-#set(OpenCV_DIR "C:/Users/Administrator/Desktop/Python/vcpkg/vcpkg/packages/opencv_x64-windows/share/opencv")
-#find_package(OpenCV REQUIRED)
-#link_directories("C:/Users/Administrator/Downloads/openCV/opencv/build/lib")
-#include_directories(${OpenCV_INCLUDE_DIRS})
-#target_link_libraries(texture2 PRIVATE ${OpenCV_LIBS})
-
-# this is heuristically generated, and may not be correct
-# find_package(OpenCV CONFIG REQUIRED)
-# note: 10 additional targets are not displayed.
-# target_link_libraries(main PRIVATE opencv_ml opencv_dnn opencv_core opencv_flann)
-
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        src/main.cpp
+        src/mainwindow.cpp
+        include/mainwindow.h
+        src/mainwindow.ui
+        include/displayscreen.h
+        src/displayscreen.cpp
+        include/resizedialog.h
+        src/resizedialog.cpp
+        src/resizedialog.ui
+        include/hsvdialog.h
+        src/hsvdialog.cpp
+        src/hsvdialog.ui
+        shaders/hsvShader.frag
+        include/hsv_opengl.h
+        src/hsv_opengl.cpp
+        shaders/hsvShader.vert
+
+        resource.qrc
+        style.qss
 )
+
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(texture2
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        displayscreen.h displayscreen.cpp
-        resizedialog.h resizedialog.cpp resizedialog.ui
-        hsvdialog.h hsvdialog.cpp hsvdialog.ui
-        hsvShader.frag
-        hsv_opengl.h hsv_opengl.cpp
-        hsvShader.vert
-
-        resource.qrc
-        style.qss
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET texture2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -64,6 +60,8 @@ else()
         )
     endif()
 endif()
+
+target_include_directories(texture2 PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/ui)
 
 target_link_libraries(texture2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 

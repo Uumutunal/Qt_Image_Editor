@@ -1,6 +1,5 @@
 #include "resizedialog.h"
-#include "ui_resizedialog.h"
-#include "displayscreen.h"
+#include "ui/ui_resizedialog.h"
 #include <QIntValidator>
 
 resizeDialog::resizeDialog(QWidget *parent)
