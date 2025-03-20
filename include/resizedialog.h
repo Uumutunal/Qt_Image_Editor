@@ -23,11 +23,9 @@ private slots:
 
     void on_pushButton_apply_clicked();
 
-    void on_checkBox_keepAspectRatio_checkStateChanged(const Qt::CheckState &arg1);
+    void on_lineEdit_x_textEdited(const QString &arg1);
 
-    void on_lineEdit_x_textChanged(const QString &arg1);
-
-    void on_lineEdit_y_textChanged(const QString &arg1);
+    void on_lineEdit_y_textEdited(const QString &arg1);
 
 private:
     Ui::resizeDialog *ui;
@@ -35,7 +33,6 @@ private:
     QSize rSize;
 
     float aspectRatio;
-    bool isEditing;
 };
 
 #endif // RESIZEDIALOG_H

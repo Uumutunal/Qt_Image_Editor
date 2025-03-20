@@ -22,6 +22,7 @@ resizeDialog::~resizeDialog()
 void resizeDialog::setSize(QSize rSize)
 {
     this->rSize = rSize;
+
     QString info;
     QTextStream(&info) << rSize.width();
 
@@ -45,39 +46,24 @@ void resizeDialog::on_pushButton_apply_clicked()
 {
     QSize newSize(ui->lineEdit_x->text().toInt(), ui->lineEdit_y->text().toInt());
     setSize(newSize);
-    qDebug() << newSize;
     accept();
 }
 
 
-void resizeDialog::on_checkBox_keepAspectRatio_checkStateChanged(const Qt::CheckState &arg1)
+void resizeDialog::on_lineEdit_x_textEdited(const QString &arg1)
 {
-
+    int newHeight = arg1.toInt() / aspectRatio;
+    QString info;
+    QTextStream(&info) << newHeight;
+    ui->lineEdit_y->setText(info);
 }
 
 
-void resizeDialog::on_lineEdit_x_textChanged(const QString &arg1)
+void resizeDialog::on_lineEdit_y_textEdited(const QString &arg1)
 {
-    if(ui->checkBox_keepAspectRatio->isChecked() && !isEditing){
-        isEditing = true;
-        int newHeight = arg1.toInt() / aspectRatio;
-        QString info;
-        QTextStream(&info) << newHeight;
-        ui->lineEdit_y->setText(info);
-        isEditing = false;
-    }
-}
-
-
-void resizeDialog::on_lineEdit_y_textChanged(const QString &arg1)
-{
-    if(ui->checkBox_keepAspectRatio->isChecked() && !isEditing){
-        isEditing = true;
-        int newWidth = arg1.toInt() * aspectRatio;
-        QString info;
-        QTextStream(&info) << newWidth;
-        ui->lineEdit_x->setText(info);
-        isEditing = false;
-    }
+    int newWidth = arg1.toInt() * aspectRatio;
+    QString info;
+    QTextStream(&info) << newWidth;
+    ui->lineEdit_x->setText(info);
 }
 

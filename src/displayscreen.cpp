@@ -80,11 +80,8 @@ void DisplayScreen::wheelEvent(QWheelEvent *event)
     if (numDegrees.y() != 0) {
         double scaleFactor = (numDegrees.y() > 0) ? (16.0 / numDegrees.y()) : (14.0 / -numDegrees.y());
 
-        float offsetx = (width() / 2) - pos.x();
-        float offsety = (height() / 2) - pos.y();
-        QPointF offset2 = QPointF((width() / 2) - pos.x() , (height() / 2) - pos.y());
+        QPointF offset = QPointF((width() / 2) - pos.x() , (height() / 2) - pos.y());
 
-        //
         double scaleX = transform.m11();
         double scaleY = transform.m22();
         float dy = (height() / 2.0f) - (imgT.height() / 2.0f);
@@ -95,36 +92,11 @@ void DisplayScreen::wheelEvent(QWheelEvent *event)
 
         QPoint b(imgT.width() / 2, imgT.height() / 2);
         QPoint c = a - b;
-        //
 
-        QPointF scenePosBeforeZoom = transform.inverted().map(offset2);
-        //QPointF scenePosBeforeZoom = QPointF(offset2.x() / transform.m11(), offset2.y() / transform.m22());
-        // Apply scaling
-        //transform.translate((imgT.width() / 2.0) - c.x(), (imgT.height() / 2.0) - c.y());
         transform.translate(imgT.width() / 2.0, imgT.height() / 2.0);
         transform.scale(scaleFactor, scaleFactor);
         c = QPoint(c.x() * transform.m11(), c.y() * transform.m22());
         transform.translate(-imgT.width() / 2.0, -imgT.height() / 2.0);
-        //transform.translate((-imgT.width() / 2.0) + c.x(), (-imgT.height() / 2.0) + c.y());
-
-        // Convert the position back and adjust translation
-        QPointF scenePosAfterZoom = transform.inverted().map(offset2);
-        //QPointF scenePosAfterZoom = QPointF(offset2.x() / transform.m11(), offset2.y() / transform.m22());
-
-        QPointF offset = scenePosAfterZoom - scenePosBeforeZoom;
-
-        qDebug() << a - b;
-
-        if(numDegrees.y() > 0){
-            //transform.translate(-offsetx / 10, -offsety / 10);
-            //transform.translate(-offset.x(), -offset.y());
-            //transform.translate(-c.x() / 10, -c.y() / 10);
-        }
-        else{
-            //transform.translate(offsetx / 10, offsety / 10);
-            //transform.translate(offset.x(), offset.y());
-            //transform.translate(c.x() / 10, c.y() / 10);
-        }
 
     }
     this->update();
@@ -172,35 +144,8 @@ void DisplayScreen::paintEvent(QPaintEvent *event)
     }
 }
 
-bool DisplayScreen::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type()==QEvent::KeyPress) {
-        qDebug() << "KeyPress";
-        QKeyEvent* key = static_cast<QKeyEvent*>(event);
-        if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {
-            //Enter or return was pressed
-            qDebug() << "enter";
-        } else {
-            return QObject::eventFilter(obj, event);
-        }
-        return true;
-    } else {
-        return QObject::eventFilter(obj, event);
-    }
-    return false;
-}
-
-void DisplayScreen::keyPressEvent(QKeyEvent *event)
-{
-    qDebug() << "Key Pressed!";
-    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
-        qDebug() << "Enter key detected!";
-    }
-}
-
 void DisplayScreen::mousePressEvent(QMouseEvent *eventPress)
 {
-    qDebug() << "pressed " << eventPress->pos();
     mousePos = eventPress->pos();
     mouseStartPos = eventPress->pos();
 }
@@ -289,7 +234,6 @@ void DisplayScreen::mouseMoveEvent(QMouseEvent *event)
 
 void DisplayScreen::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
-    qDebug() << "released " << releaseEvent->pos();
     mouseStartPos = QPoint(-1,-1);
 }
 

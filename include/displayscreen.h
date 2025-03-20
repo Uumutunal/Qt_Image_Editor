@@ -31,8 +31,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
     void mousePressEvent(QMouseEvent *eventPress) override;
     void paintEvent(QPaintEvent *event) override;
-    bool eventFilter(QObject *obj, QEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
 
     QTransform transform;
     QPoint mousePos;
